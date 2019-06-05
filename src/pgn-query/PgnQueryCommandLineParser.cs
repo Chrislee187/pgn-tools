@@ -13,7 +13,7 @@ namespace pgn_query
         public string Round => SimpleParser.HasOption("round") ? SimpleParser.Option("round") : "";
         public string White => SimpleParser.HasOption("white") ? SimpleParser.Option("white") : "";
         public string Black => SimpleParser.HasOption("black") ? SimpleParser.Option("black") : "";
-        public string Result => SimpleParser.HasOption("result") ? SimpleParser.Option("event") : "";
+        public string Result => SimpleParser.HasOption("result") ? SimpleParser.Option("result") : "";
 
         public PgnQueryCommandLineParser(string[] args) : base(args)
         {
