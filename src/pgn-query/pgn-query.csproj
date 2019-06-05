@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\pgn-reader\pgn-reader.csproj" />
     <ProjectReference Include="..\pgn-tools.common\pgn-tools.common.csproj" />
   </ItemGroup>
 

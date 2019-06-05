@@ -16,6 +16,7 @@ namespace pgn_tools.common
         public string[] FileSources {get; private set; } = new List<string>().ToArray();
         public bool HasErrors => _errors.Any();
         public IEnumerable<Exception> Errors => _errors;
+        public bool Debug => SimpleParser.HasFlag("debug");
 
         public CommonParser(string[] args, IFileSystemProvider fileSystemProvider = null)
         {
@@ -46,11 +47,10 @@ namespace pgn_tools.common
                 //                else
                 //                {
                 //                    // TODO: Check for paths with patterns in
-                //
                 //                }
                 else
                 {
-                    _errors.Add(new FileNotFoundException("Couldn't resolve file source.", fileSource));
+                    _errors.Add(new FileNotFoundException($"Couldn't resolve file source: {fileSource}", fileSource));
                 }
             }
 
@@ -61,7 +61,11 @@ namespace pgn_tools.common
         {
             public bool FileExists(string path) => File.Exists(path);
             public bool DirectoryExists(string path) => Directory.Exists(path);
-            public string[] GetFiles(string path, bool recurse = false, string pattern = "*.pgn") => Directory.GetFiles(path);
+            public string[] GetFiles(string path, bool recurse = false, string pattern = "*.pgn") 
+                => Directory.GetFiles(
+                    path, 
+                    pattern, 
+                    recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
         }
     }
 }
