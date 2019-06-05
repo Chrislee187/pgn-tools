@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using PgnReader;
@@ -23,37 +24,42 @@ namespace pgn_query
 
             var gamesRead = 0;
             var filesRead = 0;
-            var totalMatches = 0;
             var parserFileSources = parser.FileSources.ToList();
             var totalFiles = parserFileSources.Count;
             
+            var opts = new PgnGameFinderService.FindOptions(
+                parserFileSources.ToArray(),
+                parser.Debug,
+                parser.CountMode,
+                parser.Event,
+                parser.Site,
+                parser.Date,
+                parser.Round,
+                parser.White, parser.Black, parser.Result);
 
-            parserFileSources.ForEach(parserFileSource =>
+            var worker = new PgnGameFinderService();
+
+            worker.OnFileRead += (sender, filename, games) =>
             {
-                if (parser.Debug) Info(parser, $"Parsing: {filesRead + 1}/{totalFiles}\n");
+                Info(parser, $" {games.Count()} Games read from: {filename}\n");
+            };
 
-                var games = PgnGame.ReadAllGamesFromFile(parserFileSource).ToList();
+            worker.OnMatchesFound += (sender, matched) =>
+            {
+                Info(parser, $" {matched.Count()} games matched.\n");
 
-                Info(parser, parser.Debug 
-                    ? $" Games read: {games.Count()} | {parserFileSource}\n" 
-                    : ".");
-
-                gamesRead += games.Count();
-                filesRead++;
-
-                var matchedGames = games.AsEnumerable().FindGames(parser).ToList();
-                totalMatches += matchedGames.Count();
                 if (!parser.CountMode)
                 {
-                    Writer.WriteLine(matchedGames.Aggregate("", (s, game) => s + ("\n" + game.PgnText)));
+                    // NOTE: Won't be able to use this approach when sorting is implemented, will need the whole data-set before outputting
+                    Writer.WriteLine(matched.Aggregate("", (s, game) => s + ("\n" + game.PgnText)));
                 }
-            });
+            };
 
-           Info(parser, "\n");
-           Info(parser, $"Files read: {filesRead}\n");
-           Info(parser, $"Games read: {gamesRead}\n");
-           Info(parser, $"Matches found: {totalMatches}\n");
-            return 0;
+            var totalMatches = worker.Find(opts);
+
+           Info(parser, $"Total Matches found: {totalMatches.Count()}\n");
+
+           return 0;
         }
 
         private static void Info(PgnQueryCommandLineParser parser, string value)

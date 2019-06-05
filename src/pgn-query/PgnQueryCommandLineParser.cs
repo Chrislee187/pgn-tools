@@ -6,6 +6,7 @@ namespace pgn_query
     public class PgnQueryCommandLineParser : CommonParser
     {
         public bool CountMode => SimpleParser.HasFlag("count");
+        public bool Json => SimpleParser.HasFlag("json");
 
         public string Event => SimpleParser.HasOption("event") ? SimpleParser.Option("event") : "";
         public string Site => SimpleParser.HasOption("site") ? SimpleParser.Option("site") : "";
