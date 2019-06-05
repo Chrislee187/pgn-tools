@@ -27,11 +27,14 @@ namespace pgn_query
                 ;
         }
 
-        private static bool ResultComparer(PgnGameResult g, string p)
+        private static bool ResultComparer(PgnGameResult result, string comparison)
         {
-            if (string.IsNullOrEmpty(p)) return true;
+            if (string.IsNullOrEmpty(comparison)) return true;
 
-            return g == PgnGameResult.BlackWins && (p == "0-1" || p == "b") || g == PgnGameResult.WhiteWins && (p == "1-0" || p == "w") || g == PgnGameResult.Draw && (p == "1/2-1/2" || p == "d");
+            return result == PgnGameResult.BlackWins && new []{"0-1", "b", "black"}.Any(c => c.Equals(comparison)) 
+                   || result == PgnGameResult.WhiteWins && new[] { "1-0", "w", "white" }.Any(c => c.Equals(comparison))
+                   || result == PgnGameResult.Draw && new[] { "1/2-1/2", "d", "draw" }.Any(c => c.Equals(comparison))
+                  ;
         }
 
         private static bool StringComparer(string g, string p)

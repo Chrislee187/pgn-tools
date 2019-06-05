@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 using PgnReader;
-using YACLAP;
 
 namespace pgn_query
 {
@@ -35,8 +31,8 @@ namespace pgn_query
             parserFileSources.ForEach(parserFileSource =>
             {
                 if (parser.Debug) Info(parser, $"Parsing: {filesRead + 1}/{totalFiles}\n");
-                IEnumerable<PgnGame> games;
-                games = PgnGame.ReadAllGamesFromFile(parserFileSource).ToList();
+
+                var games = PgnGame.ReadAllGamesFromFile(parserFileSource).ToList();
 
                 Info(parser, parser.Debug 
                     ? $" Games read: {games.Count()} | {parserFileSource}\n" 
