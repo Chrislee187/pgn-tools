@@ -30,7 +30,6 @@ namespace Tests
         {
             _parser = new CommonParser(NoArgs, _fileSystemMocker.Object);
             Assert.That(_parser.HasErrors, Is.False);
-            Assert.That(_parser.UseStdIn, Is.True);
             Assert.That(_parser.FileSources.Any(), Is.False);
         }
 
@@ -44,7 +43,6 @@ namespace Tests
             Assert.That(_parser.HasErrors, Is.True);
             Assert.That(_parser.Errors.OfType<FileNotFoundException>().Count(), Is.EqualTo(2));
 
-            Assert.That(_parser.UseStdIn, Is.False);
             Assert.That(_parser.FileSources.Any(), Is.False);
         }
         
@@ -56,7 +54,6 @@ namespace Tests
 
             Assert.That(_parser.HasErrors, Is.False);
 
-            Assert.That(_parser.UseStdIn, Is.False);
             Assert.That(_parser.FileSources.Count(), Is.EqualTo(2));
             CollectionAssert.Contains(_parser.FileSources, TwoArgs[0]);
             CollectionAssert.Contains(_parser.FileSources, TwoArgs[1]);
@@ -72,9 +69,7 @@ namespace Tests
             _parser = new CommonParser(OneArg, _fileSystemMocker.Object);
 
             Assert.That(_parser.HasErrors, Is.False);
-
-            Assert.That(_parser.UseStdIn, Is.False);
-
+            
             Assert.That(_parser.FileSources.Count(), Is.EqualTo(3));
             CollectionAssert.DoesNotContain(_parser.FileSources, OneArg.Single());
             
@@ -90,7 +85,6 @@ namespace Tests
 
             Assert.That(_parser.HasErrors, Is.False);
 
-            Assert.That(_parser.UseStdIn, Is.False);
             Assert.That(_parser.FileSources.Count(), Is.EqualTo(3));
             _fileSystemMocker.VerifyGetFilesWasRecursive();
         }

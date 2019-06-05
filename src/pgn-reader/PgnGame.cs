@@ -18,6 +18,10 @@ namespace PgnReader
             => PgnUnparsedGame
                 .Parse(pgnText)
                 .Select(Parse);
+        public static IEnumerable<PgnGame> ReadAllGamesFromStream(StreamReader stream)
+            => PgnUnparsedGame
+                .Parse(stream)
+                .Select(Parse);
 
         private static PgnGame Parse(PgnUnparsedGame text)
         {

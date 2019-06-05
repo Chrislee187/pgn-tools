@@ -12,7 +12,6 @@ namespace pgn_tools.common
         private List<Exception> _errors = new List<Exception>();
         private IFileSystemProvider _fileSystemProvider;
 
-        public bool UseStdIn { get; }
         public string[] FileSources {get; private set; } = new List<string>().ToArray();
         public bool HasErrors => _errors.Any();
         public IEnumerable<Exception> Errors => _errors;
@@ -23,12 +22,7 @@ namespace pgn_tools.common
             _fileSystemProvider = fileSystemProvider ?? new FileSystemProvider();
             SimpleParser = new SimpleParser(args);
 
-            UseStdIn = !SimpleParser.Arguments.Any();
-
-            if (!UseStdIn)
-            {
-                FileSources = ResolveFileSources(SimpleParser.Arguments, SimpleParser.HasFlag("recurse"));
-            }
+            FileSources = ResolveFileSources(SimpleParser.Arguments, SimpleParser.HasFlag("recurse"));
         }
 
         private string[] ResolveFileSources(string[] sources, bool recurse = false, string pattern = "*.pgn")
