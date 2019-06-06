@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using PgnReader;
@@ -14,7 +13,8 @@ namespace pgn_query
         static int Main(string[] args)
         {
             var parser = new PgnQueryCommandLineParser(args);
-            ConsoleHeader(parser);
+            var opts = CreateOptions(parser);
+
 
             if (parser.HasErrors)
             {
@@ -22,49 +22,45 @@ namespace pgn_query
                 return -1;
             }
 
-            var gamesRead = 0;
-            var filesRead = 0;
-            var parserFileSources = parser.FileSources.ToList();
-            var totalFiles = parserFileSources.Count;
-            
-            var opts = new PgnGameFinderService.FindOptions(
-                parserFileSources.ToArray(),
-                parser.Debug,
-                parser.CountMode,
-                parser.Event,
-                parser.Site,
-                parser.Date,
-                parser.Round,
-                parser.White, parser.Black, parser.Result);
+            ConsoleHeaderForCountMode(parser);
+  
 
             var worker = new PgnGameFinderService();
 
             worker.OnFileRead += (sender, filename, games) =>
             {
-                Info(parser, $" {games.Count()} Games read from: {filename}\n");
+                OutputForCountMode(parser, $" {games.Count()} Games read from: {filename}\n");
             };
 
             worker.OnMatchesFound += (sender, matched) =>
             {
-                Info(parser, $" {matched.Count()} games matched.\n");
-
-                if (!parser.CountMode)
+                var pgnGames = matched.ToList();
+                if(!OutputForCountMode(parser, $" {pgnGames.Count()} games matched.\n"))
                 {
-                    // NOTE: Won't be able to use this approach when sorting is implemented, will need the whole data-set before outputting
-                    Writer.WriteLine(matched.Aggregate("", (s, game) => s + ("\n" + game.PgnText)));
+                    OutputPgnFiles(pgnGames);
                 }
             };
 
             var totalMatches = worker.Find(opts);
 
-           Info(parser, $"Total Matches found: {totalMatches.Count()}\n");
+           OutputForCountMode(parser, $"Total Matches found: {totalMatches.Count()}\n");
 
            return 0;
         }
 
-        private static void Info(PgnQueryCommandLineParser parser, string value)
+        private static void OutputPgnFiles(List<PgnGame> pgnGames)
         {
-            if (parser.CountMode) Writer.Write(value);
+            Writer.WriteLine(pgnGames.Aggregate("", (s, game) => s + ("\n" + game.PgnText)));
+        }
+
+        private static bool OutputForCountMode(PgnQueryCommandLineParser parser, string value)
+        {
+            if (parser.CountMode)
+            {
+                Writer.Write(value);
+            }
+
+            return parser.CountMode;
         }
 
         private static void OutputParserErrors(PgnQueryCommandLineParser parser)
@@ -73,16 +69,31 @@ namespace pgn_query
             ErrorWriter.WriteLine($"{parser.Errors.Select(e => e.Message).Aggregate((s, e) => s + (e + "\n"))}");
         }
 
-        private static void ConsoleHeader(PgnQueryCommandLineParser parser)
+        private static PgnGameFinderService.FindOptions CreateOptions(PgnQueryCommandLineParser parser)
         {
-            Info(parser,$"{GetDisplayVersion()}\n");
+            var opts = new PgnGameFinderService.FindOptions(
+                parser.FileSources,
+                parser.Debug,
+                parser.CountMode,
+                parser.Event,
+                parser.Site,
+                parser.Date,
+                parser.Round,
+                parser.White, parser.Black, parser.Result);
+            return opts;
         }
 
-        private static string GetDisplayVersion()
+        private static void ConsoleHeaderForCountMode(PgnQueryCommandLineParser parser)
         {
-            var assemblyName =typeof(Program).Assembly.GetName();
+            OutputForCountMode(parser,$"{GetDisplayVersion<Program>()}\n");
+            OutputForCountMode(parser,$"{GetDisplayVersion<PgnGame>()}\n");
+        }
+
+        private static string GetDisplayVersion<T>(string name = "")
+        {
+            var assemblyName =typeof(T).Assembly.GetName();
             var version = assemblyName.Version.ToString();
-            var name = assemblyName.Name;
+            name = string.IsNullOrEmpty(name) ? assemblyName.Name : name;
             return $"{name} V{version}";
         }
     }
