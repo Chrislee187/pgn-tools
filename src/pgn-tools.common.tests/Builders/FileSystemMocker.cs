@@ -14,7 +14,7 @@ namespace pgn
 
 
         public void SetupGetFiles(string[] strings, bool recurse = false, string pattern = "*.pgn") =>
-            _mockFileSystem.Setup(fs => fs.GetFiles(It.IsAny<string>(), recurse, pattern))
+            _mockFileSystem.Setup(fs => fs.GetFiles(It.IsAny<string>(), pattern, recurse))
                 .Returns(strings);
 
         public void SetupDirectoryExists(bool value) =>
@@ -28,7 +28,6 @@ namespace pgn
         private void VerifyGetFiles(bool recurse, string pattern) =>
             _mockFileSystem.Verify(fs => fs.GetFiles(
                 It.IsAny<string>(),
-                recurse,
-                "*.pgn"));
+                "*.pgn", recurse));
     }
 }

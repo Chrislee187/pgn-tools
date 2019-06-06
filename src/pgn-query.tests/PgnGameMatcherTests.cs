@@ -29,14 +29,14 @@ namespace Tests
 
             _pgnGame = new PgnGameBuilder().Build();
 
-            _findOptions = new PgnGameFinderService.FindOptions(null, false, false,
+            _findOptions = new PgnGameFinderService.FindOptions(null,
                 "event compare",
                 "site compare",
                 "2019.0.01",
                 "1",
                 "white compare",
                 "black compare",
-                "1/2-1/2");
+                "1/2-1/2", false, false);
         }
 
         [Test]

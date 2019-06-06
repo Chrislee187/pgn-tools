@@ -70,14 +70,14 @@ namespace PgnReader
                         break;
                     case PgnTurnTokenTypes.TurnStart:
                     {
-                        turnIdx = token.ToInt();
+
                         if (white != null && black != null)
                         {
-                            turns.Add(new PgnTurn(token.ToInt(), white, black));
+                            turns.Add(new PgnTurn(turnIdx, white, black));
                             white = black = null;
                             annotation = null;
                         }
-
+                        turnIdx = token.ToInt();
                         break;
                     }
                     case PgnTurnTokenTypes.Notation when white == null:

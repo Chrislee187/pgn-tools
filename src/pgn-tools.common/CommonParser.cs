@@ -36,7 +36,7 @@ namespace pgn_tools.common
                 }
                 else if (_fileSystemProvider.DirectoryExists(fileSource))
                 {
-                    resolvedPaths.AddRange(_fileSystemProvider.GetFiles(fileSource, recurse, pattern));
+                    resolvedPaths.AddRange(_fileSystemProvider.GetFiles(fileSource, pattern, recurse));
                 }
                 //                else
                 //                {
@@ -51,11 +51,12 @@ namespace pgn_tools.common
             return resolvedPaths.ToArray();
         }
 
+        // NOTE: There are no tests for this class as is only a simple pass through to system library calls
         class FileSystemProvider : IFileSystemProvider
         {
             public bool FileExists(string path) => File.Exists(path);
             public bool DirectoryExists(string path) => Directory.Exists(path);
-            public string[] GetFiles(string path, bool recurse = false, string pattern = "*.pgn") 
+            public string[] GetFiles(string path, string pattern = "*.pgn", bool recurse = false) 
                 => Directory.GetFiles(
                     path, 
                     pattern, 

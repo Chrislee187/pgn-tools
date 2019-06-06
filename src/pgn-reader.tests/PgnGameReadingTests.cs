@@ -45,6 +45,8 @@ namespace PgnReader.tests
             Assert.That(pgnGame.Result, Is.EqualTo(PgnGameResult.Draw));
 
             Assert.That(pgnGame.Turns.Count(), Is.EqualTo(43));
+            Assert.That(pgnGame.Turns.First().Turn, Is.EqualTo(1));
+            Assert.That(pgnGame.Turns.Last().Turn, Is.EqualTo(43));
 
             return true;
         }

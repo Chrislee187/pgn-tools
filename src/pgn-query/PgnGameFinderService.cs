@@ -41,10 +41,11 @@ namespace pgn_query
             public string Black { get; }
             public string Result { get; }
 
-            public FindOptions(string[] fileSources, bool debug,
-                bool countMode,
+            public FindOptions(string[] fileSources,
                 string @event, string site, string date, string round, string white,
-                string black, string result)
+                string black, string result,
+                bool countMode,
+                bool debug)
             {
                 FileSources = fileSources;
                 Debug = debug;

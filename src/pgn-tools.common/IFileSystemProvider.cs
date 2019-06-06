@@ -4,6 +4,6 @@
     {
         bool FileExists(string path);
         bool DirectoryExists(string path);
-        string[] GetFiles(string path, bool recurse = false, string pattern = "*.pgn");
+        string[] GetFiles(string path, string pattern = "*.pgn", bool recurse = false);
     }
 }

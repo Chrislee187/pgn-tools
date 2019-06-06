@@ -73,13 +73,11 @@ namespace pgn_query
         {
             var opts = new PgnGameFinderService.FindOptions(
                 parser.FileSources,
-                parser.Debug,
-                parser.CountMode,
                 parser.Event,
                 parser.Site,
                 parser.Date,
                 parser.Round,
-                parser.White, parser.Black, parser.Result);
+                parser.White, parser.Black, parser.Result, parser.CountMode, parser.Debug);
             return opts;
         }
 
