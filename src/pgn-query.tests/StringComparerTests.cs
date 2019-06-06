@@ -1,5 +1,6 @@
+using Castle.Core.Logging;
 using NUnit.Framework;
-using pgn_query;
+using StringComparer = pgn_query.StringComparer;
 
 namespace Tests
 {

@@ -3,7 +3,12 @@ using PgnReader;
 
 namespace pgn_query
 {
-    public class PgnGameResultComparer 
+    public interface IPgnGameResultComparer
+    {
+        bool Compare(PgnGameResult result, string comparison);
+    }
+
+    public class PgnGameResultComparer : IPgnGameResultComparer
     {
         public bool Compare(PgnGameResult result, string comparison)
         {

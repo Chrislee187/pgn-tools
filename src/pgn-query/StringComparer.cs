@@ -1,6 +1,11 @@
 ﻿namespace pgn_query
 {
-    public class StringComparer
+    public interface IStringComparer
+    {
+        bool Compare(string source, string comparison);
+    }
+
+    public class StringComparer : IStringComparer
     {
         public bool Compare(string source, string comparison)
         {

@@ -12,6 +12,7 @@ namespace PgnReader
 #if DEBUG
         private string DebuggerDisplayText => $"{White} vs {Black} @ {Event} #{Round} {Result}";
 # endif
+        public static PgnGame NullGame = new PgnGame("", "", null, null, PgnGameResult.Unknown);
         public static IEnumerable<PgnGame> ReadAllGamesFromFile(string filename) => ReadAllGamesFromString(File.ReadAllText(filename));
 
         public static IEnumerable<PgnGame> ReadAllGamesFromString(string pgnText)

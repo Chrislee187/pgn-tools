@@ -7,8 +7,14 @@ namespace pgn_query
 {
     public class PgnGameMatcher
     {
-        private readonly PgnGameResultComparer _resultComparer = new PgnGameResultComparer();
-        private readonly StringComparer _stringComparer = new StringComparer();
+        private readonly IStringComparer _stringComparer;
+        private readonly IPgnGameResultComparer _pgnGameResultComparer;
+
+        public PgnGameMatcher(IStringComparer stringComparer = null, IPgnGameResultComparer pgnGameResultComparer = null)
+        {
+            _stringComparer = stringComparer ?? new StringComparer();
+            _pgnGameResultComparer = pgnGameResultComparer ?? new PgnGameResultComparer();
+        }
         public bool MatchGame(PgnGame game, PgnGameFinderService.FindOptions options)
         {
             var stringComparisons = new List<Func<bool>>()
@@ -22,7 +28,7 @@ namespace pgn_query
             };
 
             return stringComparisons.All(c => c())
-                   && _resultComparer.Compare(game.Result, options.Result.ToLower())
+                   && _pgnGameResultComparer.Compare(game.Result, options.Result.ToLower())
                 ;
         }
     }
