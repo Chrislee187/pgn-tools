@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="YACLAP" Version="1.0.23" />
+    <PackageReference Include="YACLAP" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>
